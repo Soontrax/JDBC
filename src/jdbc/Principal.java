@@ -70,12 +70,13 @@ public class Principal {
 
     }
 
-    public static void ActualizarBasedeDatos(Connection conexion) {
+    public static void ActualizarBasedeDatos(Connection conexion){
         JOptionPane.showMessageDialog(null, "Has accedido a la opción Actualizar Base de Datos");
         ResultSet resultado;
         try {
             Statement st = conexion.createStatement();
-            int row = st.executeUpdate("UPDATE bar SET name = 'Pepe' WHERE name = 'Satisfaction'");
+            int row = st.executeUpdate("UPDATE bar SET address = 'Hola' WHERE address = 'Dixie' ");
+            conexion.commit();
             System.out.println("El numero de filas afectadas ha sido" + row);
         } catch (SQLException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, "No se ha actualizado correctamente");
@@ -87,7 +88,8 @@ public class Principal {
         ResultSet resultado;
         try {
             Statement st = conexion.createStatement();
-            int update = st.executeUpdate("INSERT INTO bar " + "VALUES('Antonio' , 'Algaida')");
+            int update = st.executeUpdate("INSERT INTO beer " + "VALUES ('Antonia' , 'Palma')");
+            conexion.commit();
         } catch (SQLException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
