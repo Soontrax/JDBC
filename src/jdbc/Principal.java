@@ -20,6 +20,7 @@ public class Principal {
         try {
             boolean salir = false;
             Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/beer", "root", "12345");
+            conexion.setAutoCommit(false);
             while (!salir) {
                 JOptionPane.showMessageDialog(null, "Bienvenido al Gestor de base de datos del IES Francesc Borja Moll");
                 System.out.println("1. Consultar la Base de Datos");
@@ -74,14 +75,21 @@ public class Principal {
         ResultSet resultado;
         try {
             Statement st = conexion.createStatement();
-            int rowaf = st.executeUpdate("UPDATE bar SET name = 'Pepe' WHERE name = 'Satisfaction'");
-            System.out.println("El numero de filas afectadas ha sido" + rowaf);
+            int row = st.executeUpdate("UPDATE bar SET name = 'Pepe' WHERE name = 'Satisfaction'");
+            System.out.println("El numero de filas afectadas ha sido" + row);
         } catch (SQLException ex) {
-            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, "No se ha actualizado correctamente");
         }
     }
 
     public static void InsertardatosBasedeDatos(Connection conexion) {
         JOptionPane.showMessageDialog(null, "Has accedido a la opción Insertar Datos");
+        ResultSet resultado;
+        try {
+            Statement st = conexion.createStatement();
+            int update = st.executeUpdate("INSERT INTO bar " + "VALUES('Antonio' , 'Algaida')");
+        } catch (SQLException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
