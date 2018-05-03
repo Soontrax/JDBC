@@ -51,16 +51,27 @@ public class Principal {
     public static void ConsultarBasedeDatos(Connection conexion) {
         try {
             JOptionPane.showMessageDialog(null, "Has accedido a la opción Consultar Base de Datos");
-            ResultSet resultado;
+            ResultSet resultado = null;
             try (Statement st = conexion.createStatement()) {
-                resultado = st.executeQuery("SELECT * FROM bar");
-                String nombre;
-                String direccion;
-                while (resultado.next()) {
-                    nombre = resultado.getString("name");
-                    direccion = resultado.getString("address");
-                    System.out.println(nombre);
-                    System.out.println(direccion);
+                String tabla = JOptionPane.showInputDialog("Que tabla quieres ver");
+                System.out.println("TODAS LAS COLUMNAS     PULSA 1");
+                System.out.println("VARIAS COLUMNAS        PULSA 2");
+                int columnas = Integer.parseInt(JOptionPane.showInputDialog("Cuantas columnas quieres ver"));
+                switch (columnas) {
+                    case 1:
+                        resultado = st.executeQuery("SELECT * FROM " + tabla);
+                        ResultSetMetaData md = resultado.getMetaData();
+                        for (int i = 1; i <= md.getColumnCount(); i++) {
+                            System.out.print(md.getColumnName(i) + "\t");
+                        }
+                        while (resultado.next()) {
+                            System.out.println(" ");
+                            for (int i = 1; i <= md.getColumnCount(); i++) {
+                                System.out.print(resultado.getString(i) + "\t");
+                            }
+                        }
+                    case 2:
+
                 }
             }
             resultado.close();
@@ -70,7 +81,7 @@ public class Principal {
 
     }
 
-    public static void ActualizarBasedeDatos(Connection conexion){
+    public static void ActualizarBasedeDatos(Connection conexion) {
         JOptionPane.showMessageDialog(null, "Has accedido a la opción Actualizar Base de Datos");
         ResultSet resultado;
         try {
