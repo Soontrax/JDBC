@@ -86,9 +86,13 @@ public class Principal {
         ResultSet resultado;
         try {
             Statement st = conexion.createStatement();
-            int row = st.executeUpdate("UPDATE bar SET address = 'Hola' WHERE address = 'Dixie' ");
+            String Tabla = JOptionPane.showInputDialog("Dime la tabla que quieres ver");
+            String columna = JOptionPane.showInputDialog("Dime una columna de la tabla " + Tabla);
+            String valor = JOptionPane.showInputDialog("Dime el valor de la columna " + columna + " que quieres cambiar");
+            String cambio = JOptionPane.showInputDialog("Ahora dime por cual valor quieres sustituir el valor " + valor);
+            int row = st.executeUpdate("UPDATE " +Tabla+ " " + "SET " +columna+ " " + " = '"+cambio+"' WHERE " +columna+ " " + " = '"+valor+"' ");
             conexion.commit();
-            System.out.println("El numero de filas afectadas ha sido" + row);
+            System.out.println("El numero de filas afectadas ha sido " + row);
         } catch (SQLException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, "No se ha actualizado correctamente");
         }
@@ -99,8 +103,12 @@ public class Principal {
         ResultSet resultado;
         try {
             Statement st = conexion.createStatement();
-            int update = st.executeUpdate("INSERT INTO beer " + "VALUES ('Antonia' , 'Palma')");
+            String Tabla = JOptionPane.showInputDialog("Dime la tabla que quieres ver");
+            String Valor1 = JOptionPane.showInputDialog("Escribe el primer valor para la tabla "+Tabla);
+            String Valor2 = JOptionPane.showInputDialog("Escribe el segundo valor para la tabla "+Tabla);
+            int update = st.executeUpdate("INSERT INTO "+Tabla+ " " + "VALUES ('"+Valor1+"' , '"+Valor2+"')");
             conexion.commit();
+            System.out.println("El numero de filas afectadas ha sido " +update);
         } catch (SQLException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
