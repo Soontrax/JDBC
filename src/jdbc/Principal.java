@@ -20,14 +20,15 @@ public class Principal {
         try {
             boolean salir = false;
             Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/beer", "root", "12345");
-            conexion.setAutoCommit(false);
             while (!salir) {
-                JOptionPane.showMessageDialog(null, "Bienvenido al Gestor de base de datos del IES Francesc Borja Moll");
+                JOptionPane.showMessageDialog(null, "Bienvenido al Gestor de bas"
+                        + "e de datos del IES Francesc Borja Moll");
                 System.out.println("1. Consultar la Base de Datos");
                 System.out.println("2. Actualizar la Base de Datos(UPDATE)");
-                System.out.println("3. Insertar datos a la Base de Datos(INSERT)");
+                System.out.println("3. Insertar datos(INSERT)");
                 System.out.println("4. Salir");
-                int opcion = Integer.parseInt(JOptionPane.showInputDialog("Que opción quieres"));
+                int opcion = Integer.parseInt(JOptionPane.showInputDialog("Que o"
+                        + "pción quieres"));
                 switch (opcion) {
                     case 1:
                         Principal.ConsultarBasedeDatos(conexion);
@@ -48,69 +49,80 @@ public class Principal {
         }
     }
 
-    public static void ConsultarBasedeDatos(Connection conexion) {
-        try {
-            JOptionPane.showMessageDialog(null, "Has accedido a la opción Consultar Base de Datos");
-            ResultSet resultado = null;
-            try (Statement st = conexion.createStatement()) {
-                String tabla = JOptionPane.showInputDialog("Que tabla quieres ver");
-                System.out.println("TODAS LAS COLUMNAS     PULSA 1");
-                System.out.println("VARIAS COLUMNAS        PULSA 2");
-                int columnas = Integer.parseInt(JOptionPane.showInputDialog("Cuantas columnas quieres ver"));
-                switch (columnas) {
-                    case 1:
-                        resultado = st.executeQuery("SELECT * FROM " + tabla);
-                        ResultSetMetaData md = resultado.getMetaData();
-                        for (int i = 1; i <= md.getColumnCount(); i++) {
-                            System.out.print(md.getColumnName(i) + "\t");
-                        }
-                        while (resultado.next()) {
-                            System.out.println(" ");
-                            for (int i = 1; i <= md.getColumnCount(); i++) {
-                                System.out.print(resultado.getString(i) + "\t");
-                            }
-                        }
-                    case 2:
-
+    public static void ConsultarBasedeDatos(Connection conexion) throws SQLException {
+        JOptionPane.showMessageDialog(null, "Has accedido a la opción Consul"
+                + "tar Base de Datos");
+        ResultSet resultado = null;
+        Statement st = conexion.createStatement();
+        String tabla = JOptionPane.showInputDialog("Que tabla quieres v"
+                + "er");
+                resultado = st.executeQuery("SELECT * FROM " + tabla);
+                ResultSetMetaData md = resultado.getMetaData();
+                for (int i = 1; i <= md.getColumnCount(); i++) {
+                    System.out.print(md.getColumnName(i) + "\t");
                 }
-            }
+                while (resultado.next()) {
+                    System.out.println(" ");
+                    for (int i = 1; i <= md.getColumnCount(); i++) {
+                        System.out.print(resultado.getString(i) + "\t");
+                    }
+                }
+        st.close();
+        resultado.close();
+    }
+
+    public static void ActualizarBasedeDatos(Connection conexion) throws SQLException {
+        JOptionPane.showMessageDialog(null, "Has accedido a la opción Actualizar"
+                + " Base de Datos");
+        ResultSet resultado = null;
+
+        Statement st = conexion.createStatement();
+        String Tabla = JOptionPane.showInputDialog("Dime la tabla que quieres ver");
+        String columna = JOptionPane.showInputDialog("Dime una columna de l"
+                + "a tabla " + Tabla);
+        String valor = JOptionPane.showInputDialog("Dime el valor de la colu"
+                + "mna " + columna + " que quieres cambiar");
+        String cambio = JOptionPane.showInputDialog("Ahora dime por cual va"
+                + "lor quieres sustituir el valor " + valor);
+        int row = st.executeUpdate("UPDATE " + Tabla + " " + "SET " + columna
+                + " " + " = '" + cambio + "' WHERE " + columna + " " + " = '" + valor + "' ");
+        System.out.println("El numero de filas afectadas ha sido " + row);
+        resultado.close();
+        st.close();
+    }
+
+    public static void InsertardatosBasedeDatos(Connection conexion) throws SQLException {
+        JOptionPane.showMessageDialog(null, "Has accedido a la opción Insertar "
+                + "Datos");
+        ResultSet resultado = null;
+        conexion.setAutoCommit(false);
+        try {
+            Statement st = conexion.createStatement();
+            String Tabla = JOptionPane.showInputDialog("Dime la tabla que quier"
+                    + "es ver");
+            String Valor1 = JOptionPane.showInputDialog("Escribe el primer valor"
+                    + " para la tabla " + Tabla);
+            String Valor2 = JOptionPane.showInputDialog("Escribe el segundo val"
+                    + "or para la tabla " + Tabla);
+            /**
+             *
+             */
+            String Tabla1 = JOptionPane.showInputDialog("Dime la segunda tabla q"
+                    + "ue quieres ver");
+            String Valor3 = JOptionPane.showInputDialog("Escribe el primer val"
+                    + "or para la segunda tabla " + Tabla1);
+            String Valor4 = JOptionPane.showInputDialog("Escribe el segundo val"
+                    + "or para la segunda tabla " + Tabla1);
+            int update = st.executeUpdate("INSERT INTO " + Tabla + " " + "VALUES ('" + Valor1 + "' , '" + Valor2 + "')");
+            int update1 = st.executeUpdate("INSERT INTO " + Tabla1 + " " + "VALUES ('" + Valor3 + "' , '" + Valor4 + "')");
+            conexion.commit();
+            System.out.println("El numero de filas afectadas ha sido " + update);
+            st.close();
             resultado.close();
         } catch (SQLException ex) {
-            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, "La consulta no se ha hayado correctamente");
-        }
-
-    }
-
-    public static void ActualizarBasedeDatos(Connection conexion) {
-        JOptionPane.showMessageDialog(null, "Has accedido a la opción Actualizar Base de Datos");
-        ResultSet resultado;
-        try {
-            Statement st = conexion.createStatement();
-            String Tabla = JOptionPane.showInputDialog("Dime la tabla que quieres ver");
-            String columna = JOptionPane.showInputDialog("Dime una columna de la tabla " + Tabla);
-            String valor = JOptionPane.showInputDialog("Dime el valor de la columna " + columna + " que quieres cambiar");
-            String cambio = JOptionPane.showInputDialog("Ahora dime por cual valor quieres sustituir el valor " + valor);
-            int row = st.executeUpdate("UPDATE " +Tabla+ " " + "SET " +columna+ " " + " = '"+cambio+"' WHERE " +columna+ " " + " = '"+valor+"' ");
-            conexion.commit();
-            System.out.println("El numero de filas afectadas ha sido " + row);
-        } catch (SQLException ex) {
-            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, "No se ha actualizado correctamente");
-        }
-    }
-
-    public static void InsertardatosBasedeDatos(Connection conexion) {
-        JOptionPane.showMessageDialog(null, "Has accedido a la opción Insertar Datos");
-        ResultSet resultado;
-        try {
-            Statement st = conexion.createStatement();
-            String Tabla = JOptionPane.showInputDialog("Dime la tabla que quieres ver");
-            String Valor1 = JOptionPane.showInputDialog("Escribe el primer valor para la tabla "+Tabla);
-            String Valor2 = JOptionPane.showInputDialog("Escribe el segundo valor para la tabla "+Tabla);
-            int update = st.executeUpdate("INSERT INTO "+Tabla+ " " + "VALUES ('"+Valor1+"' , '"+Valor2+"')");
-            conexion.commit();
-            System.out.println("El numero de filas afectadas ha sido " +update);
-        } catch (SQLException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            conexion.rollback();
+            System.out.println("Los cambios no se han podido establecer correctamente");
         }
     }
 }
